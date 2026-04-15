@@ -1,41 +1,568 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-  <title>Web của Ngọc</title>
-  <style>
-    body {
-      font-family: Arial;
-      background: linear-gradient(to right, #4facfe, #00f2fe);
-      text-align: center;
-      padding: 50px;
-    }
-    .box {
-      background: white;
-      padding: 20px;
-      border-radius: 15px;
-      width: 300px;
-      margin: auto;
-    }
-    a {
-      display: block;
-      margin: 10px;
-      padding: 10px;
-      background: #4facfe;
-      color: white;
-      border-radius: 8px;
-      text-decoration: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Sách Bảng Theo Dõi - Bố Cục Sidebar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar-menu a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            display: block;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            padding: 30px;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title h1 {
+            font-size: 26px;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .header-title p {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-actions button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #2c3e50;
+        }
+
+        .btn-secondary:hover {
+            background: #bdc3c7;
+        }
+
+        .filters-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: 1fr 200px 200px;
+            gap: 15px;
+        }
+
+        .filters input,
+        .filters select {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .filters input:focus,
+        .filters select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .tables-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .table-item {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .table-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .table-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .table-icon {
+            font-size: 32px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .table-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .table-description {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .table-stats {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .stat-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .table-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .table-actions button {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .btn-access {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-access:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-details {
+            background: #ecf0f1;
+            color: #2c3e50;
+        }
+
+        .btn-details:hover {
+            background: #bdc3c7;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 30px;
+        }
+
+        .pagination button {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .pagination button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        .pagination button:hover {
+            border-color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-content {
+                margin-left: 200px;
+                padding: 15px;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+            }
+
+            .tables-list {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .header-actions {
+                width: 100%;
+            }
+
+            .header-actions button {
+                flex: 1;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            📊 Bảng Theo Dõi
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="#" class="active">🏠 Trang Chủ</a></li>
+            <li><a href="#">📊 Tất Cả Bảng</a></li>
+            <li><a href="#">⭐ Yêu Thích</a></li>
+            <li><a href="#">🔗 Chia Sẻ Với Tôi</a></li>
+            <li><a href="#">👥 Nhóm</a></li>
+            <li><a href="#">⚙️ Cài Đặt</a></li>
+            <li><a href="#">❓ Trợ Giúp</a></li>
+        </ul>
+    </div>
 
-  <h1>🔗 Link của tôi</h1>
+    <div class="main-content">
+        <div class="header">
+            <div class="header-title">
+                <h1>Danh Sách Bảng Theo Dõi</h1>
+                <p>Tổng cộng: 6 bảng | 28 người dùng</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-primary">+ Bảng Mới</button>
+                <button class="btn-secondary">📥 Nhập</button>
+            </div>
+        </div>
 
-  <div class="box">
-    <a href="https://facebook.com">Facebook</a>
-    <a href="https://youtube.com">YouTube</a>
-    <a href="https://google.com">Google</a>
-  </div>
+        <div class="filters-section">
+            <div class="filters">
+                <input type="text" placeholder="🔍 Tìm kiếm bảng...">
+                <select>
+                    <option>Tất cả trạng thái</option>
+                    <option>Hoạt động</option>
+                    <option>Không hoạt động</option>
+                </select>
+                <select>
+                    <option>Sắp xếp mới cập nhật</option>
+                    <option>Sắp xếp A-Z</option>
+                    <option>Sắp xếp người sử dụng</option>
+                </select>
+            </div>
+        </div>
 
+        <div class="tables-list">
+            <div class="table-item">
+                <div class="table-header">
+                    <div class="table-icon">📈</div>
+                    <span class="status-badge status-active">Hoạt động</span>
+                </div>
+                <div class="table-title">Doanh Thu Bán Hàng</div>
+                <div class="table-description">Theo dõi doanh thu bán hàng theo ngày, tuần, tháng</div>
+                <div class="table-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">👤 Người dùng:</span>
+                        <span class="stat-value">5</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">📅 Cập nhật:</span>
+                        <span class="stat-value">14/04/2026</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">📝 Bản ghi:</span>
+                        <span class="stat-value">1,250</span>
+                    </div>
+                </div>
+                <div class="table-actions">
+                    <button class="btn-access">Truy Cập</button>
+                    <button class="btn-details">Chi Tiết</button>
+                </div>
+            </div>
+
+            <div class="table-item">
+                <div class="table-header">
+                    <div class="table-icon">📦</div>
+                    <span class="status-badge status-active">Hoạt động</span>
+                </div>
+                <div class="table-title">Quản Lý Tồn Kho</div>
+                <div class="table-description">Quản lý hàng tồn kho, nhập kho và xuất kho chi tiết</div>
+                <div class="table-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">👤 Người dùng:</span>
+                        <span class="stat-value">3</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">📅 Cập nhật:</span>
+                        <span class="stat-value">14/04/2026</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">📝 Bản ghi:</span>
+                        <span class="stat-value">856</span>
+                    </div>
+                </div>
+                <div class="table-actions">
+                    <button class="btn-access">Truy Cập</button>
+                    <button class="btn-details">Chi Tiết</button>
+                </div>
+            </div>
+
+            <div class="table-item">
+                <div class="table-header">
+                    <div class="table-icon">🎯</div>
+                    <span class="status-badge status-active">Hoạt động</span>
+                </div>
+                <div class="table-title">Hiệu Suất Công Việc</div>
+                <div class="table-description">Phân tích hiệu suất công việc và năng suất nhân viên</div>
+                <div class="table-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">👤 Người dùng:</span>
+                        <span class="stat-value">8</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">📅 Cập nhật:</span>
+                        <span class="stat-value">13/04/2026</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">📝 Bản ghi:</span>
+                        <span class="stat-value">520</span>
+                    </div>
+                </div>
+                <div class="table-actions">
+                    <button class="btn-access">Truy Cập</button>
+                    <button class="btn-details">Chi Tiết</button>
+                </div>
+            </div>
+
+            <div class="table-item">
+                <div class="table-header">
+                    <div class="table-icon">👥</div>
+                    <span class="status-badge status-inactive">Không hoạt động</span>
+                </div>
+                <div class="table-title">Thông Tin Khách Hàng</div>
+                <div class="table-description">Quản lý dữ liệu khách hàng và lịch sử giao dịch</div>
+                <div class="table-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">👤 Người dùng:</span>
+                        <span class="stat-value">2</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">📅 Cập nhật:</span>
+                        <span class="stat-value">12/04/2026</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">📝 Bản ghi:</span>
+                        <span class="stat-value">730</span>
+                    </div>
+                </div>
+                <div class="table-actions">
+                    <button class="btn-access">Truy Cập</button>
+                    <button class="btn-details">Chi Tiết</button>
+                </div>
+            </div>
+
+            <div class="table-item">
+                <div class="table-header">
+                    <div class="table-icon">📋</div>
+                    <span class="status-badge status-active">Hoạt động</span>
+                </div>
+                <div class="table-title">Dự Án Đang Thực Hiện</div>
+                <div class="table-description">Quản lý tiến độ dự án và tài nguyên dự án</div>
+                <div class="table-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">👤 Người dùng:</span>
+                        <span class="stat-value">6</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">📅 Cập nhật:</span>
+                        <span class="stat-value">14/04/2026</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">📝 Bản ghi:</span>
+                        <span class="stat-value">420</span>
+                    </div>
+                </div>
+                <div class="table-actions">
+                    <button class="btn-access">Truy Cập</button>
+                    <button class="btn-details">Chi Tiết</button>
+                </div>
+            </div>
+
+            <div class="table-item">
+                <div class="table-header">
+                    <div class="table-icon">📢</div>
+                    <span class="status-badge status-active">Hoạt động</span>
+                </div>
+                <div class="table-title">Chiến Dịch Marketing</div>
+                <div class="table-description">Chiến dịch quảng cáo và kết quả marketing</div>
+                <div class="table-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">👤 Người dùng:</span>
+                        <span class="stat-value">4</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">📅 Cập nhật:</span>
+                        <span class="stat-value">11/04/2026</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">📝 Bản ghi:</span>
+                        <span class="stat-value">340</span>
+                    </div>
+                </div>
+                <div class="table-actions">
+                    <button class="btn-access">Truy Cập</button>
+                    <button class="btn-details">Chi Tiết</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="pagination">
+            <button>« Trước</button>
+            <button class="active">1</button>
+            <button>2</button>
+            <button>Tiếp »</button>
+        </div>
+    </div>
 </body>
 </html>
